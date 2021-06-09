@@ -48,3 +48,7 @@ int main ()
     cout << "\n Kliknij dowolny klawisz na klawiaturze, aby zamknac...\n";
     getchar();
 }
+
+// prawy slash prawa góra problem
+// zrób warunek że nie może wygrywac więcej niż jest pól
+// no i generalnie minimalny rozmiar planszy daj 3x3

@@ -82,8 +82,9 @@ bool Plansza::czy_remis ()
 
 char Plansza::sprawdz_czy_wygrana()
 {
-    int licznikX=0, licznikO=0;
-    for (int w=0; w<this->ROZM; w++) // Sprawdza wiersze
+    int licznikX=0, licznikO=0; // Liczniki X i O
+    int iteracje1=0, iteracje2=0; bool koniec=false; // Zmienne pomocnicze do sprawdzania skosów
+    for (int w=0; w<this->ROZM; w++) // (---) Sprawdza wiersze 
     {
         for (int k=0; k<this->ROZM; k++)
         {
@@ -107,10 +108,10 @@ char Plansza::sprawdz_czy_wygrana()
                 licznikX=0;
             }
         }
-        licznikO=0; licznikX=0;
-    }  licznikO=0; licznikX=0; // Reset liczników
+        licznikO=0; licznikX=0; // Reset liczników
+    } 
 
-    for (int k=0; k<this->ROZM; k++) // Sprawdza kolumny
+    for (int k=0; k<this->ROZM; k++) // ( | ) Sprawdza kolumny
     {
         for (int w=0; w<this->ROZM; w++)
         {
@@ -134,187 +135,140 @@ char Plansza::sprawdz_czy_wygrana()
                 licznikX=0;
             }
         }
-        licznikO=0; licznikX=0;
-    } licznikO=0; licznikX=0; // Reset liczników
+        licznikO=0; licznikX=0; // Reset liczników
+    } 
 
-    for (int skos=0; skos<this->ROZM; skos++) // Sprawdza na ukos (\)
+    while (koniec == false) // Pętla sprawdzania (\)
     {
-        if (this->POLE[skos][skos]=='X')
+        if (this->ROZM - this->ILE_WYGRYWA - iteracje1 >= 0) // (\) Tutaj sprawdzam prawy górny róg planszy, wraz ze środkową przekątną (lecę od góry)
         {
-            licznikO = 0;
-            licznikX++;
-            if (licznikX >= this->ILE_WYGRYWA)
-                return 'X';
-       }
-        else if (this->POLE[skos][skos]=='O')
-        {
-            licznikX = 0;
-            licznikO++;
-            if (licznikO >= this->ILE_WYGRYWA)
-                return 'O';
+            for (int k=this->ROZM - this->ILE_WYGRYWA - iteracje1, w=0; k<this->ROZM && w<this->ROZM; k++, w++)
+            {
+                if (this->POLE[w][k]=='X')
+                {
+                    licznikO = 0;
+                    licznikX++;
+                    if (licznikX >= this->ILE_WYGRYWA)
+                        return 'X';
+                }
+                else if (this->POLE[w][k]=='O')
+                {
+                    licznikX = 0;
+                    licznikO++;
+                    if (licznikO >= this->ILE_WYGRYWA)
+                        return 'O';
+                }
+                else if (this->POLE[w][k]==' ')
+                {
+                    licznikO=0;
+                    licznikX=0;
+                }   
+            }
+            licznikO=0; licznikX=0; // Reset liczników
+            iteracje1++; // Przechodzi na kolumnę mniejszą o 1
         }
-        else if (this->POLE[skos][skos]==' ')
+        else
         {
-            licznikO=0;
-            licznikX=0;
-        }   
-    } licznikO=0; licznikX=0; // Reset liczników
-
-    for (int k=this->ROZM-1, w=0; k>=0 && w<this->ROZM; k--, w++) // Sprawdza na ukos (/)
-    {
-        if (this->POLE[w][k]=='X')
-        {
-            licznikO = 0;
-            licznikX++;
-            if (licznikX >= this->ILE_WYGRYWA)
-                return 'X';
-       }
-        else if (this->POLE[w][k]=='O')
-        {
-            licznikX = 0;
-            licznikO++;
-            if (licznikO >= this->ILE_WYGRYWA)
-                return 'O';
+            if (this->ROZM - this->ILE_WYGRYWA - iteracje2 > 0) // (\) Tutaj sprawdzam lewy dolny róg bez środkowej przekątnej (lecę od dołu) 
+            {
+               for (int w=this->ROZM - this->ILE_WYGRYWA - iteracje2, k=0; k<this->ROZM && w<this->ROZM; k++, w++)
+                {
+                    if (this->POLE[w][k]=='X')
+                    {
+                        licznikO = 0;
+                        licznikX++;
+                        if (licznikX >= this->ILE_WYGRYWA)
+                            return 'X';
+                    }
+                    else if (this->POLE[w][k]=='O')
+                    {
+                        licznikX = 0;
+                        licznikO++;
+                        if (licznikO >= this->ILE_WYGRYWA)
+                            return 'O';
+                    }
+                    else if (this->POLE[w][k]==' ')
+                    {
+                        licznikO=0;
+                        licznikX=0;
+                    }   
+                }
+                licznikO=0; licznikX=0; // Reset liczników
+                iteracje2++; // Przechodzi na wiersz mniejszy o 1
+            }
+            else
+                koniec = true;
         }
-        else if (this->POLE[w][k]==' ')
-        {
-            licznikO=0;
-            licznikX=0;
-        }   
-    } licznikO=0; licznikX=0; // Reset liczników
-
-    // int iteracje1=0, iteracje2=0; bool koniec=false; 
-    // while (koniec == false) // Pętla sprawdzania (\)
-    // {
-    //     if (this->ROZM - this->ILE_WYGRYWA - iteracje1 >= 0) // (\) Tutaj sprawdzam prawy górny róg planszy, wraz ze środkową przekątną (lecę od góry)
-    //     {
-    //         for (int k=this->ROZM - this->ILE_WYGRYWA - iteracje1, w=0; k<this->ROZM && w<this->ROZM; k++, w++)
-    //         {
-    //             if (this->POLE[w][k]=='X')
-    //             {
-    //                 licznikO = 0;
-    //                 licznikX++;
-    //                 if (licznikX >= this->ILE_WYGRYWA)
-    //                     return 'X';
-    //             }
-    //             else if (this->POLE[w][k]=='O')
-    //             {
-    //                 licznikX = 0;
-    //                 licznikO++;
-    //                 if (licznikO >= this->ILE_WYGRYWA)
-    //                     return 'O';
-    //             }
-    //             else if (this->POLE[w][k]==' ')
-    //             {
-    //                 licznikO=0;
-    //                 licznikX=0;
-    //             }   
-    //         }
-    //         licznikO=0; licznikX=0;
-    //         iteracje1++;
-    //     }
-    //     else
-    //     {
-    //         if (this->ROZM - this->ILE_WYGRYWA - iteracje2 > 0) // (\) Tutaj sprawdzam lewy dolny róg bez środkowej przekątnej (lecę od dołu)
-    //         {
-    //            for (int w=this->ROZM - this->ILE_WYGRYWA - iteracje2, k=0; k<this->ROZM && w<this->ROZM; k++, w++)
-    //             {
-    //                 if (this->POLE[w][k]=='X')
-    //                 {
-    //                     licznikO = 0;
-    //                     licznikX++;
-    //                     if (licznikX >= this->ILE_WYGRYWA)
-    //                         return 'X';
-    //                 }
-    //                 else if (this->POLE[w][k]=='O')
-    //                 {
-    //                     licznikX = 0;
-    //                     licznikO++;
-    //                     if (licznikO >= this->ILE_WYGRYWA)
-    //                         return 'O';
-    //                 }
-    //                 else if (this->POLE[w][k]==' ')
-    //                 {
-    //                     licznikO=0;
-    //                     licznikX=0;
-    //                 }   
-    //             }
-    //             licznikO=0; licznikX=0;
-    //             iteracje2++; 
-    //         }
-    //         else
-    //             koniec = true;
-    //     }
-    // } licznikO=0; licznikX=0; // Reset liczników
-    // iteracje1=0; iteracje2=0; koniec = false; 
+    } 
+    iteracje1=0; iteracje2=0; koniec = false; 
     
-    // while (koniec == false) // Pętla sprawdzania (/)
-    // {
-    //     if (this->ROZM - (this->ROZM - this->ILE_WYGRYWA + 1) + iteracje1 <= this->ROZM-1) // (/) Tutaj sprawdzam lewy górny róg planszy, wraz ze środkową przekątną (lecę od góry)
-    //     {
-    //         for (int k=this->ROZM - (this->ROZM - this->ILE_WYGRYWA + 1) + iteracje1, w=0; k>=0 && w<this->ROZM; k--, w++)
-    //         {
-    //             if (this->POLE[w][k]=='X')
-    //             {
-    //                 licznikO = 0;
-    //                 licznikX++;
-    //                 if (licznikX >= this->ILE_WYGRYWA)
-    //                     return 'X';
-    //             }
-    //             else if (this->POLE[w][k]=='O')
-    //             {
-    //                 licznikX = 0;
-    //                 licznikO++;
-    //                 if (licznikO >= this->ILE_WYGRYWA)
-    //                     return 'O';
-    //             }
-    //             else if (this->POLE[w][k]==' ')
-    //             {
-    //                 licznikO=0;
-    //                 licznikX=0;
-    //             }   
-    //         } 
-    //         licznikO=0; licznikX=0;  
-    //         iteracje1++;
-    //     }
-    //     else
-    //     {
-    //         if (this->ROZM - this->ILE_WYGRYWA - iteracje2 > 0) // (/)Tutaj sprawdzam prawy dolny róg bez środkowej przekątnej (lecę od dołu)
-    //         {
-    //            for (int w=this->ROZM - this->ILE_WYGRYWA - iteracje2, k=this->ROZM-1; k<=0 && w<this->ROZM; k--, w++)
-    //             {
-    //                 if (this->POLE[w][k]=='X')
-    //                 {
-    //                     licznikO = 0;
-    //                     licznikX++;
-    //                     if (licznikX >= this->ILE_WYGRYWA)
-    //                         return 'X';
-    //                 }
-    //                 else if (this->POLE[w][k]=='O')
-    //                 {
-    //                     licznikX = 0;
-    //                     licznikO++;
-    //                     if (licznikO >= this->ILE_WYGRYWA)
-    //                         return 'O';
-    //                 }
-    //                 else if (this->POLE[w][k]==' ')
-    //                 {
-    //                     licznikO=0;
-    //                     licznikX=0;
-    //                 }   
-    //             }
-    //             licznikO=0; licznikX=0;
-    //             iteracje2++; 
-    //         }
-    //         else
-    //             koniec = true;
-    //     }
-    // }
-
-    return ' ';
+    while (koniec == false) // Pętla sprawdzania (/)
+    {
+        if (this->ILE_WYGRYWA - 1 + iteracje1 < this->ROZM) // (/) Tutaj sprawdzam lewy górny róg planszy, wraz ze środkową przekątną (lecę od góry) 
+        {
+            for (int k=this->ILE_WYGRYWA - 1 + iteracje1, w=0; k>=0 && w<this->ROZM; k--, w++)
+            {
+                if (this->POLE[w][k]=='X')
+                {
+                    licznikO = 0;
+                    licznikX++;
+                    if (licznikX >= this->ILE_WYGRYWA)
+                        return 'X';
+                }
+                else if (this->POLE[w][k]=='O')
+                {
+                    licznikX = 0;
+                    licznikO++;
+                    if (licznikO >= this->ILE_WYGRYWA)
+                        return 'O';
+                }
+                else if (this->POLE[w][k]==' ')
+                {
+                    licznikO=0;
+                    licznikX=0;
+                }   
+            } 
+            licznikO=0; licznikX=0; // Reset liczników
+            iteracje1++;
+        }
+        else
+        {
+            if (this->ROZM - this->ILE_WYGRYWA - iteracje2 > 0) // (/)Tutaj sprawdzam prawy dolny róg bez środkowej przekątnej (lecę od dołu) 
+            {
+               for (int w=this->ROZM - this->ILE_WYGRYWA - iteracje2, k=this->ROZM-1; k>=0 && w<this->ROZM; k--, w++)
+                {
+                    if (this->POLE[w][k]=='X')
+                    {
+                        licznikO = 0;
+                        licznikX++;
+                        if (licznikX >= this->ILE_WYGRYWA)
+                            return 'X';
+                    }
+                    else if (this->POLE[w][k]=='O')
+                    {
+                        licznikX = 0;
+                        licznikO++;
+                        if (licznikO >= this->ILE_WYGRYWA)
+                            return 'O';
+                    }
+                    else if (this->POLE[w][k]==' ')
+                    {
+                        licznikO=0;
+                        licznikX=0;
+                    }   
+                }
+                licznikO=0; licznikX=0; // Reset liczników
+                iteracje2++; 
+            }
+            else
+                koniec = true;
+        }
+    } 
+    
+    return ' '; // Jeśli w żadną stronę nie ma wygranej, to zwraca puste pole (BRAK WYGRANEJ)
 }
 
-int Plansza::minmax (/*int wiersz, int kolumna, */bool kolejSI, int ilosc_rekurencji)
+int Plansza::minmax (bool kolejSI, int ilosc_rekurencji)
 {
     int score, licznik = 0;
 
