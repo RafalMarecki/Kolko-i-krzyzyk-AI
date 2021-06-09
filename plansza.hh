@@ -21,8 +21,8 @@ class Plansza
     // bool czy_wygrana (char XO, int wiersz, int kolumna);
     char sprawdz_czy_wygrana ();
     // int minmax (int wiersz, int kolumna, bool czySI, int ilosc_rekurencji);
-    int minmax (bool czySI, int ilosc_rekurencji);
-    void najlepszy_ruch (Si & komputer);
+    int minmax (bool czySI, int ilosc_rekurencji, int alpha, int beta);
+    void najlepszy_ruch (Si & komputer, int alpha, int beta);
 };
 
 #endif
